@@ -1,0 +1,48 @@
+---
+# THIS WORKS, becuase it's behind a lookup and is sourcing variables using jinja
+# UNCOMMENT THIS TASK AND COMMENT OTHER TASKS TO TRY THIS
+- name: Create a working nodeport service using lookup
+  k8s:
+    definition: "{{ lookup('template', 'bugged-service-definition.yaml.j2') | from_yaml }}" # THIS WORKS BECAUSE ITS USING JINJA VARIABLE SUBSTITUTION (because of the lookup)
+
+
+# THIS DOES NOT WORK, becuase it's inline (not behind a lookup) and is sourcing variables using ansible
+# UNCOMMENT THIS TASK AND COMMENT OTHER TASKS TO TRY THIS
+# - name: Create a bugged exact same nodeport service using inline
+#   k8s:
+#     definition:
+#       apiVersion: v1
+#       kind: Service
+#       metadata:
+#         name: bugged-service
+#         namespace: "{{ meta.namespace }}"
+#       spec:
+#         type: NodePort
+#         selector:
+#           test: test
+#         ports:
+#           - protocol: TCP
+#             nodePort: {{custom_resource_value}} # THIS DOES NOT WORK BECAUSE ITS USING ANSIBLE VARIABLE SUBSTITUTION
+#             port: 80 # pod/svc internal port maps to...
+#             targetPort: 80 # container internal port
+
+
+# This also DOES NOT WORK, because the quotations around the variable sourcing cause it to become a string and fail validation
+# UNCOMMENT THIS TASK AND COMMENT OTHER TASKS TO TRY THIS
+- name: Create a bugged exact same nodeport service using inline
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: bugged-service
+        namespace: "{{ meta.namespace }}"
+      spec:
+        type: NodePort
+        selector:
+          test: test
+        ports:
+          - protocol: TCP
+            nodePort: "{{custom_resource_value}}" # THIS DOES NOT WORK BECAUSE IT CAUSES VALUE TO CONVERT TO STRING AND FAIL VALIDATION
+            port: 80 # pod/svc internal port maps to...
+            targetPort: 80 # container internal port

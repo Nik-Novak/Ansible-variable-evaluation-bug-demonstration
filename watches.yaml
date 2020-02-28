@@ -1,0 +1,5 @@
+---
+- version: v1
+  group: test.example.com
+  kind: Test
+  role: /opt/ansible/roles/test
