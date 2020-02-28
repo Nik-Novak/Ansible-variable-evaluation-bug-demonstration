@@ -8,7 +8,7 @@ or this git issue:
 https://github.com/operator-framework/operator-sdk/issues/2609
 
 # Using the operator
-To use this operator, create a new namespace/project and run ./build.sh <docker-registry/image-name:v1>. For example: ./build.sh/ quay.io/username/test-operator:v1
+To use this operator, create a new namespace/project and run ./build.sh <docker-registry/image-name:v1>. For example: ./build.sh/ quay.io/username/test-operator:v1 It needs a temporary registry to store the dockerfile so that pods can access it.
 
 Inspect the ansible logs with ./logs.sh to see the errors caused by different methods of using THE SAME RESOURCE_DEFINITION
 
